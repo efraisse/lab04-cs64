@@ -28,12 +28,12 @@ main:
     syscall
     move $t0, $v0
     li $t3, 1
-    ble, $t0, $t3, print1
     addi $t1, $t0, -1
 
     li $v0, 4
     la $a0, phrase2
     syscall
+    ble, $t0, $t3, print1
     j loop
 
 loop:
