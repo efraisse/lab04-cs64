@@ -6,9 +6,9 @@
 
 # TODO: Complete these declarations / initializations
 
-nextNum = .asciiz "Enter the next number:\n"
+nextNum: .asciiz "Enter the next number:\n"
 
-median = .asciiz "Median: "
+med: .asciiz "Median: "
 
 #Text Area (i.e. instructions)
 .text
@@ -39,60 +39,50 @@ main:
     syscall
     move $t2, $v0
 
-    blt $t0, $t1, t0LessThan
-    blt $t1, $t0, t1LessThan
+    blt $t0, $t1, t1GreaterThan
+    blt $t1, $t0, t0GreaterThan
 
-t0LessThan:
+t1GreaterThan:
+    blt $t1, $t2, t1IsMedian
     blt $t2, $t0, t0IsMedian
     blt $t0, $t2, t2IsMedian
 
-t1LessThan:
+t0GreaterThan:
+    blt $t0, $t2, t0IsMedian
     blt $t2, $t1, t1IsMedian
     blt $t1, $t2, t2IsMedian
 
 t0IsMedian:
     li $v0, 4
-    la $a0, median
+    la $a0, med
     syscall
     
     li $v0, 1
     move $a0, $t0
     syscall
-    J exit
+    j exit
 
 t1IsMedian:
 
     li $v0, 4
-    la $a0, median
+    la $a0, med
     syscall
     
     li $v0, 1
     move $a0, $t1
     syscall
-    J exit
+    j exit
 
 t2IsMedian:
 
     li $v0, 4
-    la $a0, median
+    la $a0, med
     syscall
     
     li $v0, 1
     move $a0, $t2
     syscall
-    J exit
-
-    // if (t0 < t1) {
-    //    if (t1 < t2) {
-    //      cout << t1;
-    //    }
-    // } else if (t0 < t2) {
-    //   if (t0 > t1) {
-    //      cout << t0;
-    //   }
-    // } else {
-    //   if (t2 < t1) 
-    // }
+    j exit
 
 exit:
 	# Exit
