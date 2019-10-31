@@ -191,10 +191,10 @@ doSwap:
         
 whileloop:
         li $t2, 4 #amount of times x has to loop before exiting
-        beq $t0, $t2, exit #if x has looped enough times then exit the loop
+        beq $t0, $t2, exitloop #if x has looped enough times then exit the loop
         sll $t3, $t0, 2 #shift x by 4 in order to obtain the appropriate address for the location of the element
-        add $t4, $t1, $t3 #shift index to the right to obtain the next value in memory (this is x from the c++ program)
-        sub $t5, $t1, $t3 #shift index to the left to obtain the next value in memory (this is y from the c++ program)
+        addu $t4, $t1, $t3 #shift index to the right to obtain the next value in memory (this is x from the c++ program)
+        subu $t5, $t1, $t3 #shift index to the left to obtain the next value in memory (this is y from the c++ program)
 
         lw $t2, 0($t4) #this entire portion: load the words from memory and then store them in the other address, no temporary variable
         lw $t6, 32($t5) #needs to be assigned in order to swap x and y
@@ -203,5 +203,5 @@ whileloop:
 
         addiu $t0, $t0, 1 #increment x by 1 at the end of the loop       
         j whileloop #jump back to the top to loop again
-exit:
+exitloop:
         jr $ra
