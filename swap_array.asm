@@ -186,36 +186,36 @@ doSwap:
 
         # TODO: fill in the code
         
-        li $t0, 36
-        li $t1, 0
-        li $t2, -1
-        li $t7, 4
+        li $t0, 32 #first element in myarray index
+        li $t1, 0 #last element in myarray index
         la $t3, myArray
         j whileloop
 
 whileloop:
         #$t2 stores x
-        #$t4 stores myArray[x]
-        #$t5 stores myArray[y]
+        #$t4 stores the address of myArray[x]
+        #$t5 stores the address of myArray[y]
         #$t6 stores the temp variable required for the switch
-        addiu, $t2, $t2, 1
-        addu $t4, $t3, $t1
-        addu $t5, $t3, $t0
-        lw $t4, 0(&t4)
-        lw $t5, 0($t4)
+        addu $t6, $t3, $t0 #$t6 contains the address of the first element
+        addu $t7, $t3, $t1 #$t7 contains the address of the last element
+        lw $t4, 0($t6) #$t4 now contains the first element of my array
+        lw $t5, 0($t7) #$t5 now contains the last element of my array
+
         #im doing the swap over here
-        #thinking about using move to move elements of my array from one part to the other
-        add $t6, $t4, 0
-        move $t4, $t5
-        move $t5, $t6;        
+        addiu $t2, $t4, 0
+        li $t4, 0
+        addu $t4, $t4, $t5
+        li $t5, 0
+        addu $t5, $t5, $t2
+        
+        sw $t4, 0($t6) #saving value of $t4 into memory
+        sw $t5, 0($t7) #saving value of $t5 into memory
 
         #$t0 and $t1 here represent the array indexes so i'm doing x++ and y-- here
-        subu $t0, $t0, 1
-        addiu $t1, $t1, 1
         addiu $t1, $t1, 4
         subu $t0, $t0, 4
         
-        ble, $t1, $t7, whileloop 
+        ble, $t6, $t7, whileloop 
 
         # do not remove this last line
         jr $ra
