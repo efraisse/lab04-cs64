@@ -185,6 +185,37 @@ doSwap:
         # }
 
         # TODO: fill in the code
+        
+        li $t0, 36
+        li $t1, 0
+        li $t2, -1
+        li $t7, 4
+        la $t3, myArray
+        j whileloop
+
+whileloop:
+        #$t2 stores x
+        #$t4 stores myArray[x]
+        #$t5 stores myArray[y]
+        #$t6 stores the temp variable required for the switch
+        addiu, $t2, $t2, 1
+        addu $t4, $t3, $t1
+        addu $t5, $t3, $t0
+        lw $t4, 0(&t4)
+        lw $t5, 0($t4)
+        #im doing the swap over here
+        #thinking about using move to move elements of my array from one part to the other
+        add $t6, $t4, 0
+        move $t4, $t5
+        move $t5, $t6;        
+
+        #$t0 and $t1 here represent the array indexes so i'm doing x++ and y-- here
+        subu $t0, $t0, 1
+        addiu $t1, $t1, 1
+        addiu $t1, $t1, 4
+        subu $t0, $t0, 4
+        
+        ble, $t1, $t7, whileloop 
 
         # do not remove this last line
         jr $ra
