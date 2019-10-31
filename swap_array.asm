@@ -186,35 +186,22 @@ doSwap:
 
         # TODO: fill in the code
         
-        li $t0, 36 #index of last element in myarray
-        li $t1, 0 #index of first element in myarray
-        la $t3, myArray #the address of the first element in my array
-        j whileloop
-        
+        li $t0, 0 #variable x which will keep track of the loop
+        la $t1, myArray #loading address of first element of myArray into $t3
         
 whileloop:
-        #$t6 stores the address of myArray[x]
-        #$t7 stores the address of myArray[y]
-        #it make sense to subtract values from $t3 because the stack addresses moves from high values to low values
-        subu $t6, $t3, $t1 #t6 contains the address of the first element, subtracting 0 -> points to first element
-        subu $t7, $t3, $t0 #t7 contains the address of the last element, subtracting 36 -> points to last element
-        
-        lw $t4, 0($t6) #$t4 now contains the first element of my array
-        lw $t5, 0($t7) #$t5 now contains the last element of my array
-        
-        #here a swap using registers is not necessary because I can just simply keep the values of 
-        #$t4 and $t5 that I got from memory and change their location
-        sw $t5, 0($t6) #saving value of $t5 which represents the last element in the spot of the first
-        sw $t4, 0($t7) #saving value of $t4 which represents the first element in the spot of the last
-        
-        #$t0 and $t1 here represent the array indexes so I'm doing x++ and y-- here
-        #I'm subtracting and adding 4 because MIPS is a 32 bit machine and addresses move by 4 bytes in memory
-        subu $t0, $t0, 4 #subtracting 4 from $t0 to obtain the second to last element in the array
-        addiu $t1, $t1, 4 #adding 4 to $t1 to obtain the second element in the array
-        
-        blt, $t0, $t1, whileloop #when register t0 becomes less than t1, I know what they have passed the middle
-        #of the array, therefore, I use blt to find out when $t0 is less than $t1 is true to jump back to main
-        #using jr $ra and evaluate my answer as the rest of the program runs 
-        
-        # do not remove this last line
+        li $t2, 4 #amount of times x has to loop before exiting
+        beq $t0, $t2, exit #if x has looped enough times then exit the loop
+        sll $t3, $t0, 2 #shift x by 4 in order to obtain the appropriate address for the location of the element
+        add $t4, $t1, $t3 #shift index to the right to obtain the next value in memory (this is x from the c++ program)
+        sub $t5, $t1, $t3 #shift index to the left to obtain the next value in memory (this is y from the c++ program)
+
+        lw $t2, 0($t4) #this entire portion: load the words from memory and then store them in the other address, no temporary variable
+        lw $t6, 32($t5) #needs to be assigned in order to swap x and y
+        sw $t6, 0($t4) 
+        sw $t2, 32($t5) 
+
+        addiu $t0, $t0, 1 #increment x by 1 at the end of the loop       
+        j whileloop #jump back to the top to loop again
+exit:
         jr $ra
