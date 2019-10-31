@@ -186,36 +186,28 @@ doSwap:
 
         # TODO: fill in the code
         
-        li $t0, 32 #first element in myarray index
-        li $t1, 0 #last element in myarray index
-        la $t3, myArray
+        li $t0, -36 #index of last element in myarray
+        li $t1, 0 #index of first element in myarray
+        la $t3, myArray #the address of the first element in my array
         j whileloop
 
 whileloop:
         #$t2 stores x
-        #$t4 stores the address of myArray[x]
-        #$t5 stores the address of myArray[y]
-        #$t6 stores the temp variable required for the switch
-        addu $t6, $t3, $t0 #$t6 contains the address of the first element
-        addu $t7, $t3, $t1 #$t7 contains the address of the last element
-        lw $t4, 0($t6) #$t4 now contains the first element of my array
-        lw $t5, 0($t7) #$t5 now contains the last element of my array
-
-        #im doing the swap over here
-        addiu $t2, $t4, 0
-        li $t4, 0
-        addu $t4, $t4, $t5
-        li $t5, 0
-        addu $t5, $t5, $t2
+        #$t6 stores the address of myArray[x]
+        #$t7 stores the address of myArray[y]
+        add $t6, $t3, $t1 #$t6 contains the address of the first element, adding zero -> already points to it
+        add $t7, $t3, $t0 #$t7 contains the address of the last element, adding 32 -> points to last element
+        lw $t4, 0($t6) #$t4 now contains the first element of myarray
+        lw $t5, 0($t7) #$t5 now contains the last element of myarray
         
-        sw $t4, 0($t6) #saving value of $t4 into memory
-        sw $t5, 0($t7) #saving value of $t5 into memory
+        sw $t5, 0($t6) #saving value of $t4 into memory
+        sw $t4, 0($t7) #saving value of $t5 into memory
 
         #$t0 and $t1 here represent the array indexes so i'm doing x++ and y-- here
-        addiu $t1, $t1, 4
-        subu $t0, $t0, 4
+        addiu $t0, $t0, 4
+        subu $t1, $t1, 4
         
-        ble, $t6, $t7, whileloop 
+        blt, $t7, $t6, whileloop 
 
         # do not remove this last line
         jr $ra
